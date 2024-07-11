@@ -29,6 +29,7 @@ public class IKManager : MonoBehaviour
 
     private void Update()
     {
+        if (m_target == null) return;
         for (int i = 0; i < m_steps; ++i)
         {
             if (GetDistance(m_end.transform.position, m_target.transform.position) > m_threshold)
