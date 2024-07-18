@@ -9,7 +9,7 @@ namespace OpenAI
         private OpenAIApi openai = new OpenAIApi();
 
         private List<ChatMessage> messages = new List<ChatMessage>();
-        private string prompt = "You are controlling a robotic arm. The arm can perform the following actions: 'move [object_name] to [object_name]', 'pick up [object_name]', 'drop [object_name]'. Respond with the exact command based on the user's request.\nUser: {0}\nResponse:";
+        private string prompt = "You are controlling a robotic arm. The arm can perform the following actions: '[object_name] move to [object_name]', 'pick up [object_name]', 'drop [object_name]'. insert object name. Respond with the exact command based on the user's request. \nUser: {0}\nResponse:";
         
         public async Task<string> SendMessageToChatGPT(string userInput)
         {
