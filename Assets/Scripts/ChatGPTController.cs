@@ -1,48 +1,48 @@
-using System;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public class ChatGPTController : MonoBehaviour
+namespace OpenAI
 {
-    private static readonly HttpClient client = new HttpClient();
-    #region API_KEY
-    private string apiKey = "sk-proj-eSHfyLCXxBq9aVvi53PwT3BlbkFJVwtX0xgm2etwFTShrhTt";
-    #endregion
-    private string apiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions";
-
-    public async Task<string> SendMessageToChatGPT(string message)
+    public class ChatGPTController : MonoBehaviour
     {
-        var requestBody = new
+        private OpenAIApi openai = new OpenAIApi();
+
+        private List<ChatMessage> messages = new List<ChatMessage>();
+        private string prompt = "You are controlling a robotic arm. The arm can perform the following actions: '[object_name] move to [object_name]', 'pick up [object_name]', 'drop [object_name]'. insert object name. Respond with the exact command based on the user's request. \nUser: {0}\nResponse:";
+        
+        public async Task<string> SendMessageToChatGPT(string userInput)
         {
-            prompt = $"You are controlling a robotic arm. The arm can perform the following actions: 'move [object_name] to [object_name]', 'pick up [object_name]', 'drop [object_name]'. Respond with the exact command based on the user's request.\nUser: {message}\nResponse:",
-            max_tokens = 50,
-            temperature = 0.7
-        };
+            var newMessage = new ChatMessage()
+            {
+                Role = "user",
+                Content = userInput
+            };
 
-        var requestJson = JsonUtility.ToJson(requestBody);
-        var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+            if (messages.Count == 0) newMessage.Content = prompt + "\n" + userInput; 
 
-        client.DefaultRequestHeaders.Clear();
-        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            messages.Add(newMessage);
 
-        var response = await client.PostAsync(apiUrl, content);
-        var responseJson = await response.Content.ReadAsStringAsync();
+            // Complete the instruction
+            var completionResponse = await openai.CreateChatCompletion(new CreateChatCompletionRequest()
+            {
+                Model = "gpt-3.5-turbo",
+                Messages = messages
+            });
 
-        var responseObject = JsonUtility.FromJson<ChatGPTResponse>(responseJson);
-        return responseObject.choices[0].text.Trim();
+            if (completionResponse.Choices != null && completionResponse.Choices.Count > 0)
+            {
+                var message = completionResponse.Choices[0].Message;
+                message.Content = message.Content.Trim();
+
+                messages.Add(message);
+                return message.Content;
+            }
+            else
+            {
+                Debug.LogWarning("No text was generated from this prompt.");
+                return null;
+            }
+        }
     }
-}
-
-[Serializable]
-public class ChatGPTResponse
-{
-    public Choice[] choices;
-}
-
-[Serializable]
-public class Choice
-{
-    public string text;
 }
