@@ -276,7 +276,7 @@ public async Task<string> SendMessageToChatGPT(string userInput)
 
 # 결과
 
-[1차본.mov](images/%25E1%2584%258E%25E1%2585%25A1%25E1%2584%2587%25E1%2585%25A9%25E1%2586%25AB.mov)
+[1차본.mov](images/result.mov)
 
 # 개선사항
 
