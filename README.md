@@ -1,6 +1,10 @@
 # chat gpt 를 이용한 unity 팔 움직이기
 
-텍스트: 1.Unity/Unreal/Game 관련Project
+# 결과 미리보기
+
+
+https://github.com/user-attachments/assets/92e81071-0c89-4082-87af-8dd5934bd54d
+
 
 # 구현 목표
 
@@ -277,6 +281,7 @@ public async Task<string> SendMessageToChatGPT(string userInput)
 # 결과
 
 [1차본.mov](images/result.mov)
+용량이커 다운밖에 안되나... 위쪽 영상이 남아있다면 그걸로 참고하자!
 
 # 개선사항
 
